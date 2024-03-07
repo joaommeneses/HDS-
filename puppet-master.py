@@ -7,7 +7,8 @@ import signal
 
 
 # Terminal Emulator used to spawn the processes
-terminal = "kitty"
+#terminal = "kitty"
+terminal = "gnome-terminal"
 
 # Blockchain node configuration file name
 server_configs = [
@@ -33,9 +34,20 @@ with open(f"Service/src/main/resources/{server_config}") as f:
         pid = os.fork()
         if pid == 0:
             os.system(
-                f"{terminal} sh -c \"cd Service; mvn exec:java -Dexec.args='{key['id']} {server_config}' ; sleep 500\"")
+                f"{terminal} -- bash -c \"cd Service; mvn exec:java -Dexec.args='{key['id']} {server_config}' ; sleep 500\"")
             sys.exit()
 
+# Spawn blockchain clients
+with open("Client/src/main/java/pt/ulisboa/tecnico/hdsledger/client/resources/client_config.json") as f:
+    data = json.load(f)
+    processes = list()
+    for key in data:
+        pid = os.fork()
+        if pid == 0:
+            os.system(
+                f"{terminal} -- bash -c \"cd Client; mvn exec:java -Dexec.args='{key['id']}' ; sleep 1000\"")
+            sys.exit(0)
+            
 signal.signal(signal.SIGINT, quit_handler)
 
 while True:
