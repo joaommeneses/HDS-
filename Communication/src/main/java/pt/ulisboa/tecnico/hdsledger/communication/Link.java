@@ -37,7 +37,7 @@ public class Link {
     // Send messages to self by pushing to queue instead of through the network
     private final Queue<Message> localhostQueue = new ConcurrentLinkedQueue<>();
 
-    public Link(ProcessConfig self, int port, ProcessConfig[] nodes, Class<? extends Message> messageClass) {
+    public Link(ProcessConfig self, int port, ProcessConfig[] nodes, Class<? extends Message> messageClass) { // Represents a network communication link between nodes in a distributed system
         this(self, port, nodes, messageClass, false, 200);
     }
 
@@ -48,10 +48,10 @@ public class Link {
         this.messageClass = messageClass;
         this.BASE_SLEEP_TIME = baseSleepTime;
 
-        Arrays.stream(nodes).forEach(node -> {
+        Arrays.stream(nodes).forEach(node -> { // Populates a map with node configurations
             String id = node.getId();
             this.nodes.put(id, node);
-            receivedMessages.put(id, new CollapsingSet());
+            receivedMessages.put(id, new CollapsingSet()); // Track received messages for each node
         });
 
         try {
@@ -91,11 +91,11 @@ public class Link {
         // To avoid blocking while waiting for ACK
         new Thread(() -> {
             try {
-                ProcessConfig node = nodes.get(nodeId);
+                ProcessConfig node = nodes.get(nodeId); // Destination Node ID
                 if (node == null)
                     throw new HDSSException(ErrorMessage.NoSuchNode);
 
-                data.setMessageId(messageCounter.getAndIncrement());
+                data.setMessageId(messageCounter.getAndIncrement()); // Assigns a unique message ID to the data being sent and retrieves the destination node's address and port.
 
                 // If the message is not ACK, it will be resent
                 InetAddress destAddress = InetAddress.getByName(node.getHostname());
@@ -115,8 +115,8 @@ public class Link {
                     return;
                 }
 
-                for (;;) {
-                    LOGGER.log(Level.INFO, MessageFormat.format(
+                for (;;) {                                          // Sends the message to the destination node. It uses exponential backoff to wait for an ACK, 
+                    LOGGER.log(Level.INFO, MessageFormat.format(    // doubling the wait time after each attempt until an ACK is received or a condition breaks the loop.
                             "{0} - Sending {1} message to {2}:{3} with message ID {4} - Attempt #{5}", config.getId(),
                             data.getType(), destAddress, destPort, messageId, count++));
 
@@ -173,13 +173,14 @@ public class Link {
         String serialized = "";
         Boolean local = false;
         DatagramPacket response = null;
-        
-        if (this.localhostQueue.size() > 0) {
+
+        // Checks if there are messages in the local queue, intended for the node itself
+        if (this.localhostQueue.size() > 0) { // If so, processes said message
             message = this.localhostQueue.poll();
             local = true; 
-            this.receivedAcks.add(message.getMessageId());
+            this.receivedAcks.add(message.getMessageId()); 
         } else {
-            byte[] buf = new byte[65535];
+            byte[] buf = new byte[65535]; // Waits for a network message via UDP, deserializes it into a Message object
             response = new DatagramPacket(buf, buf.length);
 
             socket.receive(response);
@@ -192,7 +193,7 @@ public class Link {
         String senderId = message.getSenderId();
         int messageId = message.getMessageId();
 
-        if (!nodes.containsKey(senderId))
+        if (!nodes.containsKey(senderId)) // Checks the sender's validity against known nodes.
             throw new HDSSException(ErrorMessage.NoSuchNode);
 
         // Handle ACKS, since it's possible to receive multiple acks from the same
@@ -236,7 +237,9 @@ public class Link {
             default -> {}
         }
 
-        if (!local) {
+        // Determines the sender's address and port from the received UDP packet, creates an ACK message 
+        // with the same message ID as the received message, and uses an unreliable sending method to transmit it.
+        if (!local) {   
             InetAddress address = InetAddress.getByName(response.getAddress().getHostAddress());
             int port = response.getPort();
 

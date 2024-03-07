@@ -1,3 +1,5 @@
+// Extende a mensagem, portanto hierarquicamente a cima
+
 package pt.ulisboa.tecnico.hdsledger.communication;
 
 import com.google.gson.Gson;
@@ -13,7 +15,7 @@ public class ConsensusMessage extends Message {
     // Id of the previous message
     private int replyToMessageId;
     // Message (PREPREPARE, PREPARE, COMMIT)
-    private String message;
+    private String message;  // Consegue ir buscar o tipo da mensagem devido ao setup na class Message, e limita a só receber essas
 
     public ConsensusMessage(String senderId, Type type) {
         super(senderId, type);
