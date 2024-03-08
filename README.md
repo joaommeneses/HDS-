@@ -1,4 +1,4 @@
-# To generate the asymetric keys for nodes and client, run in terminal:
+# To generate the asymmetric keys for nodes and client, run in terminal:
 
 RSAKeyGenerator <private-key-filename> <public-key-filename>
 
