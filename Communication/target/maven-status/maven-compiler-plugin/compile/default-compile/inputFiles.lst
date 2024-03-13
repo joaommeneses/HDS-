@@ -1,7 +1,7 @@
-/home/tspedrosas/Documents/HDS-/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/builder/ConsensusMessageBuilder.java
-/home/tspedrosas/Documents/HDS-/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/CommitMessage.java
-/home/tspedrosas/Documents/HDS-/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/Link.java
-/home/tspedrosas/Documents/HDS-/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/PrePrepareMessage.java
-/home/tspedrosas/Documents/HDS-/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/PrepareMessage.java
-/home/tspedrosas/Documents/HDS-/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/ConsensusMessage.java
-/home/tspedrosas/Documents/HDS-/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/Message.java
+/home/joao/Desktop/SECProject/sec2324-project-base/HDSLedger/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/ConsensusMessage.java
+/home/joao/Desktop/SECProject/sec2324-project-base/HDSLedger/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/CommitMessage.java
+/home/joao/Desktop/SECProject/sec2324-project-base/HDSLedger/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/builder/ConsensusMessageBuilder.java
+/home/joao/Desktop/SECProject/sec2324-project-base/HDSLedger/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/Link.java
+/home/joao/Desktop/SECProject/sec2324-project-base/HDSLedger/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/PrepareMessage.java
+/home/joao/Desktop/SECProject/sec2324-project-base/HDSLedger/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/PrePrepareMessage.java
+/home/joao/Desktop/SECProject/sec2324-project-base/HDSLedger/Communication/src/main/java/pt/ulisboa/tecnico/hdsledger/communication/Message.java
