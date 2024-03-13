@@ -103,6 +103,9 @@ public class Link {
                 int count = 1;
                 int messageId = data.getMessageId();
                 int sleepTime = BASE_SLEEP_TIME;
+                int maxRetries = 10;
+                double backoffMultiplier = 2.0;
+
 
                 // Send message to local queue instead of using network if destination in self
                 if (nodeId.equals(this.config.getId())) {
@@ -124,16 +127,24 @@ public class Link {
 
                     // Wait (using exponential back-off), then look for ACK
                     Thread.sleep(sleepTime);
+                
 
                     // Receive method will set receivedAcks when sees corresponding ACK
-                    if (receivedAcks.contains(messageId))
-                        break;
-
-                    sleepTime <<= 1;
-                }
-
-                LOGGER.log(Level.INFO, MessageFormat.format("{0} - Message {1} sent to {2}:{3} successfully",
+                    if (receivedAcks.contains(messageId)){
+                        LOGGER.log(Level.INFO, MessageFormat.format("{0} - Message {1} sent to {2}:{3} successfully",
                         config.getId(), data.getType(), destAddress, destPort));
+                        break;
+                    }
+
+                    // Break if the number times the message was sent reaches the maximum of retries
+                    if(count >= maxRetries){
+                        LOGGER.log(Level.WARNING, "Maximum of retries reached, stopping attempting to send message.");
+                        break;
+                    }
+
+                    // Exponential multiplier
+                    sleepTime *= backoffMultiplier; 
+                }
             } catch (InterruptedException | UnknownHostException e) {
                 e.printStackTrace();
             }
